@@ -60,7 +60,7 @@ def db_select():
     response_string+="<table>"
     for player in records:
         response_string+="<tr>"
-        for infor in player:
+        for info in player:
             response_string+="<td>{}</td>".format(info)
         response_string+="</tr"
     response_string+="</table>"
