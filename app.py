@@ -73,7 +73,6 @@ def db_drop():
     cur.execute('''
     DROP TABLE Basketball;
     ''')
-    records = cur.fetchall()
     conn.commit()
     conn.close()
     return "Basketball Table Dropped"
