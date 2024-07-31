@@ -7,9 +7,73 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World from Jasmine in 3308'
 
-@app.route('/tests')
+@app.route('/db_test')
 def db_test():
     conn = psycopg2.connect("postgresql://db00_f7md_user:dxLbuFZP3UsJPgrGK2h3dQEhOrCZAHeQ@dpg-cql4p32j1k6c739hm5q0-a/db00_f7md")
     conn.close()
     return "Database Connection Successful"
+
+@app.route('/db_create')
+def db_create():
+    conn = psycopg2.connect("postgresql://db00_f7md_user:dxLbuFZP3UsJPgrGK2h3dQEhOrCZAHeQ@dpg-cql4p32j1k6c739hm5q0-a/db00_f7md")
+    cur = conn.cursor()
+    cur.execute('''
+    CREATE TABLE IF NOT EXISTS Basketball(
+        First varchar(255),
+        Last varchar(255),
+        City varchar(255),
+        Name varchar(255),
+        Number int
+        );
+    ''')
+    conn.commit()
+    conn.close()
+    return "Create Basketball Table Finished"
     
+@app.route('db_insert')
+def db_insert():
+    conn = psycopg2.connect("postgresql://db00_f7md_user:dxLbuFZP3UsJPgrGK2h3dQEhOrCZAHeQ@dpg-cql4p32j1k6c739hm5q0-a/db00_f7md")
+    cur = conn.cursor()
+    cur.execute('''
+    INSERT INTO Basketball (First, Last, City, Name, Number)
+    Values
+    ('Jayson', 'Tatum', 'Boston', 'Celtics', 0),
+    ('Stephen', 'Curry', 'San Francisco', 'Warriors', 30),
+    ('Nikola', 'Jokic', 'Denver', 'Nuggets', 15),
+    ('Kawhi', 'Leonard', 'Los Angeles', 'Clippers', 2);
+    ''')
+    conn.commit()
+    conn.close()
+    return "Basketball Table Populated"
+
+@app.route('db_select')
+def db_select():
+    conn = psycopg2.connect("postgresql://db00_f7md_user:dxLbuFZP3UsJPgrGK2h3dQEhOrCZAHeQ@dpg-cql4p32j1k6c739hm5q0-a/db00_f7md")
+    cur = conn.cursor()
+    cur.execute('''
+    SELECT * FROM Basketball;
+    ''')
+    records = cur.fetchall()
+    conn.commit()
+    conn.close()
+    response_string=""
+    response_string+="<table>"
+    for player in records:
+        response_string+="<tr>"
+        for infor in player:
+            response_string+="<td>{}</td>".format(info)
+        response_string+=</tr"
+    response_string+="</table>"
+    return response_string
+    
+@app.route('db_drop')
+def db_drop():
+    conn = psycopg2.connect("postgresql://db00_f7md_user:dxLbuFZP3UsJPgrGK2h3dQEhOrCZAHeQ@dpg-cql4p32j1k6c739hm5q0-a/db00_f7md")
+    cur = conn.cursor()
+    cur.execute('''
+    DROP TABLE Basketball;
+    ''')
+    records = cur.fetchall()
+    conn.commit()
+    conn.close()
+    return "Basketball Table Dropped"
